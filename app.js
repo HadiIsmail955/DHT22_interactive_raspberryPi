@@ -31,7 +31,7 @@ app.use("/", router);
 const Generator = require("./class/generator.js");
 let generators = [];
 const generateController = require("./controllers/generatorController.js");
-const generatorFound = await generateController.getAllGenerators();
+const generatorFound = generateController.getAllGenerators();
 generatorFound?.forEach((generator) => {
   generators.push(new Generator(generator));
 });
