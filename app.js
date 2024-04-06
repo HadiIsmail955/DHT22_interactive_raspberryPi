@@ -33,7 +33,16 @@ let generators = [];
 const generateController = require("./controllers/generatorController.js");
 const generatorFound = generateController.getAllGenerators();
 generatorFound?.forEach((generator) => {
-  generators.push(new Generator(generator));
+  generators.push(
+    new Generator(
+      generator.id,
+      generator.generatorName,
+      generator.generateCooling,
+      generator.generateHeating,
+      generator.coolingPin,
+      generator.heatingPin
+    )
+  );
 });
 
 app.listen(process.env.PORT || 5001, () => {

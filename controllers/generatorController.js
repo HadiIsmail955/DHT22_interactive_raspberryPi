@@ -20,15 +20,17 @@ async function updateGenerator(req, res) {
     const generatorId = req.params.id;
     const updateData = req.body;
     delete updateData.generatorName;
-    const updatedGenerator = await Generator.findByIdAndUpdate(
-      generatorId,
-      updateData,
-      { new: true }
-    );
-    if (!updatedGenerator) {
+
+    const [_, updatedGenerators] = await Generator.update(updateData, {
+      where: { id: generatorId },
+      returning: true, // Get the updated records
+    });
+
+    if (updatedGenerators.length === 0) {
       return res.status(404).json({ error: "Generator not found" });
     }
-    res.status(200).json(updatedGenerator);
+
+    res.status(200).json(updatedGenerators[0]);
   } catch (error) {
     console.error("Error updating generator:", error);
     res
@@ -36,13 +38,16 @@ async function updateGenerator(req, res) {
       .json({ error: "Internal server error", message: error.message });
   }
 }
-async function getAllGenerators() {
+
+async function getAllGenerators(req, res) {
   try {
-    const generators = await Generator.find();
-    return generators;
+    const generators = await Generator.findAll();
+    res.status(200).json(generators);
   } catch (error) {
     console.error("Error fetching generators:", error);
-    throw error;
+    res
+      .status(500)
+      .json({ error: "Internal server error", message: error.message });
   }
 }
 

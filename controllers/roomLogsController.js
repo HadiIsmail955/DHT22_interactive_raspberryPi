@@ -9,19 +9,17 @@ async function createRoomLog({
   room_id,
 }) {
   try {
-    const createdRoomLog = await RoomLogs.create({
+    const createdRoomLog = await RoomLog.create({
       temperature,
       humidity,
       generateCooling,
       generateHeating,
       room_id,
     });
-    res.status(201).json(createdRoomLog);
+    return createdRoomLog;
   } catch (error) {
     console.error("Error creating room log:", error);
-    res
-      .status(500)
-      .json({ error: "Internal server error", message: error.message });
+    throw error; // Propagate the error to the caller
   }
 }
 

@@ -19,7 +19,24 @@ class generator {
     const rooms = roomController.getRoomsByGeneratorId(id);
     this.rooms = [];
     rooms.forEach((room) => {
-      this.rooms.push(new Room(room));
+      this.rooms.push(
+        new Room(
+          room.id,
+          room.roomName,
+          room.temperature,
+          room.humidity,
+          room.fanSpeed,
+          room.tolerance,
+          room.priority,
+          room.isLocked,
+          room.isON,
+          room.generateCooling,
+          room.generateHeating,
+          room.sensorPin,
+          room.coolingPin,
+          room.heatingPin
+        )
+      );
     });
     this.start();
   }

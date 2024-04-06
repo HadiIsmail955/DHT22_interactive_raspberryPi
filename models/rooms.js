@@ -1,42 +1,105 @@
-const mongoose = require("mongoose");
-const roomsSchema = new mongoose.Schema(
-  {
-    roomName: {
-      type: String,
-      required: [true, "require room name"],
-      unique: [true, "room name most be unique"],
+"use strict";
+const { Model } = require("sequelize");
+module.exports = (sequelize, DataTypes) => {
+  class rooms extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+      rooms.belongsTo(models.user, { foreignKey: "user_id" });
+      rooms.belongsTo(models.generator, { foreignKey: "generator_id" });
+    }
+  }
+  rooms.init(
+    {
+      roomName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      temperature: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 28,
+        validate: {
+          min: 15,
+          max: 32,
+        },
+      },
+      humidity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 50,
+        validate: {
+          min: 30,
+          max: 60,
+        },
+      },
+      fanSpeed: {
+        type: DataTypes.ENUM("low", "medium", "high", "auto"),
+        defaultValue: "low",
+      },
+      tolerance: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        defaultValue: 1,
+        validate: {
+          min: 0.1,
+          max: 5,
+        },
+      },
+      priority: {
+        type: DataTypes.ENUM("low", "medium", "high"),
+        defaultValue: "medium",
+      },
+      isLocked: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      isON: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      generateCooling: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      generateHeating: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      sensorPin: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        validate: {
+          min: 0,
+        },
+      },
+      coolingPin: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        validate: {
+          min: 0,
+        },
+      },
+      heatingPin: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        validate: {
+          min: 0,
+        },
+      },
     },
-    temperature: { type: Number, min: 15, max: 32, default: 28 },
-    humidity: { type: Number, min: 30, max: 60, default: 50 },
-    fanSpeed: {
-      type: String,
-      enum: ["low", "medium", "high", "auto"],
-      default: "low",
-    },
-    tolerance: { type: Number, min: 0.1, max: 5, default: 1 },
-    priority: {
-      type: String,
-      enum: ["low", "medium", "high"],
-      default: "medium",
-    },
-    isLocked: { type: Boolean, default: false },
-    isON: { type: Boolean, default: false },
-    generateCooling: {
-      type: Boolean,
-      default: false,
-    },
-    generateHeating: {
-      type: Boolean,
-      default: false,
-    },
-    sensorPin: { type: Number, min: 0, required: [true, "add sensor pin"] },
-    coolingPin: { type: Number, min: 0, required: [true, "add cooling pin"] },
-    heatingPin: { type: Number, min: 0, required: [true, "add heating pin"] },
-    user_id: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
-    generator_id: { type: mongoose.Schema.Types.ObjectId, ref: "generator" },
-  },
-  { timestamps: true }
-);
-
-const rooms = mongoose.model("rooms", roomsSchema);
-module.exports = rooms;
+    {
+      sequelize,
+      modelName: "rooms",
+    }
+  );
+  return rooms;
+};

@@ -1,4 +1,4 @@
-const Room = require("../models/rooms");
+const Room = require("../models").Room; // Import the Sequelize Room model
 
 async function createRoom(req, res) {
   try {
@@ -18,13 +18,17 @@ async function updateRoom(req, res) {
     const roomId = req.params.id;
     const updateData = req.body;
     delete updateData.roomName;
-    const updatedRoom = await Room.findByIdAndUpdate(roomId, updateData, {
-      new: true,
+
+    const [_, updatedRooms] = await Room.update(updateData, {
+      where: { id: roomId },
+      returning: true, // Get the updated records
     });
-    if (!updatedRoom) {
+
+    if (updatedRooms.length === 0) {
       return res.status(404).json({ error: "Room not found" });
     }
-    res.status(200).json(updatedRoom);
+
+    res.status(200).json(updatedRooms[0]);
   } catch (error) {
     console.error("Error updating room:", error);
     res
@@ -35,16 +39,17 @@ async function updateRoom(req, res) {
 
 async function getRoomById(roomId) {
   try {
-    const room = await Room.findById(roomId);
+    const room = await Room.findByPk(roomId);
     return room;
   } catch (error) {
     console.error("Error fetching room by ID:", error);
     throw error;
   }
 }
+
 async function getRoomsByGeneratorId(generatorId) {
   try {
-    const rooms = await Room.find({ generator_id: generatorId });
+    const rooms = await Room.findAll({ where: { generator_id: generatorId } });
     return rooms;
   } catch (error) {
     console.error("Error fetching rooms by generator ID:", error);

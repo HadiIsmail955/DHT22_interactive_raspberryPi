@@ -1,4 +1,4 @@
-// const Gpio = require("onoff").Gpio;
+const Gpio = require("onoff").Gpio;
 const roomController = require("../controllers/roomController");
 const roomLogsController = require("../controllers/roomLogsController");
 const readSensor = require("../controllers/helperfunction/readSensor");

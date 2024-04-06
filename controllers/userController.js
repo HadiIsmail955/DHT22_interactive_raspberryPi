@@ -31,7 +31,7 @@ async function loginUser(req, res) {
         .json({ error: "Username and password are required" });
     }
 
-    const user = await User.findOne({ userName });
+    const user = await User.findOne({ where: { userName } });
     if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
@@ -40,13 +40,12 @@ async function loginUser(req, res) {
     if (!passwordMatch) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
+
     const oneDayInSeconds = 24 * 60 * 60;
     const token = jwt.sign(
-      { userId: user._id, role: user.role },
+      { userId: user.id, role: user.role },
       process.env.JWT_SECRET,
-      {
-        expiresIn: oneDayInSeconds,
-      }
+      { expiresIn: oneDayInSeconds }
     );
     res.cookie("token", token, {
       httpOnly: true,

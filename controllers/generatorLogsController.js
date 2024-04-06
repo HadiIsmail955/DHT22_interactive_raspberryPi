@@ -6,7 +6,7 @@ async function createGeneratorLog({
   generator_id,
 }) {
   try {
-    const createdGeneratorLog = await GeneratorLogs.create({
+    const createdGeneratorLog = await GeneratorLog.create({
       generateCooling,
       generateHeating,
       generator_id,

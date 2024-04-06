@@ -1,17 +1,32 @@
-const mongoose = require("mongoose");
-const generatorLogsSchema = new mongoose.Schema(
-  {
-    generateCooling: {
-      type: Boolean,
-      default: false,
+"use strict";
+const { Model } = require("sequelize");
+module.exports = (sequelize, DataTypes) => {
+  class generatorLogs extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+      generatorLogs.belongsTo(models.generator, { foreignKey: "generator_id" });
+    }
+  }
+  generatorLogs.init(
+    {
+      generateCooling: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      generateHeating: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
-    generateHeating: {
-      type: Boolean,
-      default: false,
-    },
-    generator_id: { type: mongoose.Schema.Types.ObjectId, ref: "generator" },
-  },
-  { timestamps: true }
-);
-const generatorLogs = mongoose.model("generatorLogs", generatorLogsSchema);
-module.exports = generatorLogs;
+    {
+      sequelize,
+      modelName: "generatorLogs",
+    }
+  );
+  return generatorLogs;
+};
