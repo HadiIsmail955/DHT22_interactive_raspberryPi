@@ -1,11 +1,11 @@
-const Generator = require("../models/generator");
+const { generator } = require("../models");
 
 async function createGenerator(req, res) {
   try {
     const generatorData = req.body;
     delete generatorData.generateCooling;
     delete generatorData.generateHeating;
-    const createdGenerator = await Generator.create(generatorData);
+    const createdGenerator = await generator.create(generatorData);
     res.status(201).json(createdGenerator);
   } catch (error) {
     console.error("Error creating generator:", error);
@@ -21,7 +21,7 @@ async function updateGenerator(req, res) {
     const updateData = req.body;
     delete updateData.generatorName;
 
-    const [_, updatedGenerators] = await Generator.update(updateData, {
+    const [_, updatedGenerators] = await generator.update(updateData, {
       where: { id: generatorId },
       returning: true, // Get the updated records
     });
@@ -41,7 +41,7 @@ async function updateGenerator(req, res) {
 
 async function getAllGenerators(req, res) {
   try {
-    const generators = await Generator.findAll();
+    const generators = await generator.findAll();
     res.status(200).json(generators);
   } catch (error) {
     console.error("Error fetching generators:", error);

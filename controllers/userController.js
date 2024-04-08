@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const { user } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -7,7 +7,7 @@ async function createUser(req, res) {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const createdUser = await User.create({
+    const createdUser = await user.create({
       userName,
       password: hashedPassword,
     });
@@ -31,19 +31,19 @@ async function loginUser(req, res) {
         .json({ error: "Username and password are required" });
     }
 
-    const user = await User.findOne({ where: { userName } });
-    if (!user) {
+    const userModel = await user.findOne({ where: { userName } });
+    if (!userModel) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await bcrypt.compare(password, userModel.password);
     if (!passwordMatch) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
     const oneDayInSeconds = 24 * 60 * 60;
     const token = jwt.sign(
-      { userId: user.id, role: user.role },
+      { userId: userModel.id, role: userModel.role },
       process.env.JWT_SECRET,
       { expiresIn: oneDayInSeconds }
     );

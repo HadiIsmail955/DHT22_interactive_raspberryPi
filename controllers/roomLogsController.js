@@ -1,5 +1,4 @@
-const RoomLogs = require("../models/roomLogs");
-
+const {roomLogs}= require("../models");
 // Controller function to create a new room log
 async function createRoomLog({
   temperature,
@@ -9,7 +8,7 @@ async function createRoomLog({
   room_id,
 }) {
   try {
-    const createdRoomLog = await RoomLog.create({
+    const createdRoomLog = await roomLogs.create({
       temperature,
       humidity,
       generateCooling,

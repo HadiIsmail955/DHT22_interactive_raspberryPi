@@ -1,4 +1,4 @@
-const Room = require("../models").Room; // Import the Sequelize Room model
+const Room = require("../models").rooms; // Import the Sequelize Room model
 
 async function createRoom(req, res) {
   try {
