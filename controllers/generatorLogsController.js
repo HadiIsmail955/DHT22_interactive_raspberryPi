@@ -1,17 +1,14 @@
 const generatorLogs = require("../models").generatorLogs;
 
-async function createGeneratorLog({
-  generateCooling,
-  generateHeating,
-  generator_id,
-}) {
+async function createGeneratorLog(generateCooling, generateHeating, generatorId) {
   try {
-    const createdGeneratorLog = await generatorLogs.create({
-      generateCooling,
-      generateHeating,
-      generator_id,
+    const generatorLog = await generatorLogs.create({
+      generateCooling: generateCooling,
+      generateHeating: generateHeating,
+      generator_id: generatorId  
     });
-    return createdGeneratorLog;
+    console.log("Generator log created successfully");
+    return generatorLog;
   } catch (error) {
     console.error("Error creating generator log:", error);
     throw new Error("Error creating generator log");

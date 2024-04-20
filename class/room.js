@@ -147,10 +147,14 @@ class room {
     }
   }
   turnPath(time) {
-    LED.writeSync(1);
+    if(this.generateCooling)
+    this.coolingPath.writeSync(1);
+    if(this.generateHeating )
+    this.heatingPath .writeSync(1);
     setTimeout(() => {
-      LED.writeSync(0);
-    }, 1000);
+      this.coolingPath.writeSync(0);
+      this.heatingPath .writeSync(0);
+    }, 10000);
   }
 }
 

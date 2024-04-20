@@ -17,18 +17,12 @@ module.exports = (sequelize, DataTypes) => {
       temperature: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        validate: {
-          min: 15,
-          max: 32,
-        },
+        
       },
       humidity: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        validate: {
-          min: 30,
-          max: 60,
-        },
+        
       },
       generateCooling: {
         type: DataTypes.BOOLEAN,

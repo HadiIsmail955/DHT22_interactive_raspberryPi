@@ -116,7 +116,7 @@ class generator {
         this.generateHeating,
         this.id
       );
-    }, 1000);
+    }, 10000);
   }
 }
 
