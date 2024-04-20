@@ -55,16 +55,22 @@ class generator {
           const priority = room.getPriority;
           switch (priority) {
             case 1:
+            console.log("found high")
               high.push(room);
               break;
             case 2:
+            console.log("found medium")
               medium.push(room);
               break;
             case 3:
+            console.log("found low")
               low.push(room);
           }
         } else room.setGeneratorOff();
       });
+      console.log("high "+high)
+      console.log("medium "+medium)
+      console.log("low "+low)
       if (high.length == 0) {
         if (medium.length == 0) {
           low?.forEach((room) => {

@@ -83,7 +83,7 @@ class room {
   setGeneratorOff() {
     this.generateCooling = false;
     this.generateHeating = false;
-  }
+  } 
   get getUpdate() {
     const updateRroom = roomController.getRoomById(this.id);
     if (updateRroom) {
