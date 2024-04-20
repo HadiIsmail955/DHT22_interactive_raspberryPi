@@ -30,7 +30,7 @@ async function updateGenerator(req, res) {
       return res.status(404).json({ error: "Generator not found" });
     }
 
-    res.status(200).json(updatedGenerators[0]);
+    res.status(200).json(await getGeneratorById(generatorId));
   } catch (error) {
     console.error("Error updating generator:", error);
     res
@@ -39,15 +39,22 @@ async function updateGenerator(req, res) {
   }
 }
 
-async function getAllGenerators(req, res) {
+async function getAllGenerators() {
   try {
     const generators = await generator.findAll();
-    res.status(200).json(generators);
+    return generators;
   } catch (error) {
-    console.error("Error fetching generators:", error);
-    res
-      .status(500)
-      .json({ error: "Internal server error", message: error.message });
+    console.log(error)
+    throw error
+  }
+}
+async function getGeneratorById(generatorId) {
+  try {
+    const generatorFound = await generator.findByPk(generatorId);
+    return generatorFound;
+  } catch (error) {
+    console.error("Error fetching room by ID:", error);
+    throw error;
   }
 }
 

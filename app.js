@@ -28,11 +28,13 @@ app.use("/", router);
 //         console.error("Error reading sensor data:", error);
 //     }
 // }, 2000);
-/*
+// /*
 const Generator = require("./class/generator.js");
+const start =async()=>{
 let generators = [];
 const generateController = require("./controllers/generatorController.js");
-const generatorFound = generateController.getAllGenerators();
+const generatorFound = await generateController.getAllGenerators();
+console.log(generatorFound)
 generatorFound?.forEach((generator) => {
   generators.push(
     new Generator(
@@ -45,7 +47,10 @@ generatorFound?.forEach((generator) => {
     )
   );
 });
-*/
+
+// */  
+  }
+  start()
 app.listen(process.env.PORT || 5001, () => {
   try {
     console.log("connnected at port " + process.env.PORT);

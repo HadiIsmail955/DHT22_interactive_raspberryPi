@@ -27,8 +27,8 @@ async function updateRoom(req, res) {
     if (updatedRooms.length === 0) {
       return res.status(404).json({ error: "Room not found" });
     }
-
-    res.status(200).json(updatedRooms[0]);
+  
+    res.status(200).json(await getRoomById(roomId));
   } catch (error) {
     console.error("Error updating room:", error);
     res

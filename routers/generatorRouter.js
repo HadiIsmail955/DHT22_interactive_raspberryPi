@@ -5,5 +5,5 @@ app.get("/test", (req, res) => {
   res.send(test);
 });
 app.post("/create", generatorController.createGenerator);
-app.post("/updated/:id", generatorController.updateGenerator);
+app.post("/update/:id", generatorController.updateGenerator);
 module.exports = app;

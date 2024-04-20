@@ -5,5 +5,5 @@ app.get("/test", (req, res) => {
   res.send(test);
 });
 app.post("/create", roomsController.createRoom);
-app.post("/updated/:id", roomsController.updateRoom);
+app.post("/update/:id", roomsController.updateRoom);
 module.exports = app;

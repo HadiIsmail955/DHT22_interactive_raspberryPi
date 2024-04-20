@@ -16,11 +16,12 @@ class generator {
     this.generateHeating = generateHeating;
     this.coolingPin = coolingPin;
     this.heatingPin = heatingPin;
-    const rooms = roomController.getRoomsByGeneratorId(id);
-    this.rooms = [];
-    rooms.forEach((room) => {
-      this.rooms.push(
-        new Room(
+    const fetchRooms = async () => {
+      return await roomController.getRoomsByGeneratorId(id);
+    };
+    fetchRooms().then((rooms) => {
+      this.rooms = rooms.map((room) => {
+        return new Room(
           room.id,
           room.roomName,
           room.temperature,
@@ -35,10 +36,12 @@ class generator {
           room.sensorPin,
           room.coolingPin,
           room.heatingPin
-        )
-      );
+        );
+      });
+
+      // Start the generator after fetching rooms
+      this.start();
     });
-    this.start();
   }
   start() {
     setInterval(() => {
