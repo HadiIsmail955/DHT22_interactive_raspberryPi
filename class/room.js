@@ -45,14 +45,25 @@ class room {
     this.increasePriority = 0;
   }
   isOffOrStable() {
-    console.log("is stable "+!this.isON+" room id "+this.id+" "+this.isStable())
+    console.log(
+      "is stable " + !this.isON + " room id " + this.id + " " + this.isStable()
+    );
     if (!this.isON) return true;
     return this.isStable();
   }
   isStable() {
-    console.log(this.temperature + this.tolerance >= this.currentTemperature &&
-      this.temperature - this.tolerance <= this.currentTemperature)
-      console.log("*****room "+this.id+" t "+this.temperature+" c "+this.currentTemperature)
+    console.log(
+      "*****room " +
+        this.id +
+        " t " +
+        this.temperature +
+        " c " +
+        this.currentTemperature
+    );
+    console.log(
+      this.temperature + this.tolerance >= this.currentTemperature &&
+        this.temperature - this.tolerance <= this.currentTemperature
+    );
     if (
       this.temperature + this.tolerance >= this.currentTemperature &&
       this.temperature - this.tolerance <= this.currentTemperature
@@ -87,7 +98,7 @@ class room {
   setGeneratorOff() {
     this.generateCooling = false;
     this.generateHeating = false;
-  } 
+  }
   get getUpdate() {
     const updateRroom = roomController.getRoomById(this.id);
     if (updateRroom) {
@@ -142,27 +153,28 @@ class room {
     this.resetPrioity();
   }
   readSensor() {
-     readSensor(this.sensorPin).then((data)=>{
-    console.log(data)
-      this.currentTemperature = data.temperature;
-      this.currentHumidity = data.humidity;      
-    }).catch((error)=>{this.setOff();})
+    readSensor(this.sensorPin)
+      .then((data) => {
+        console.log(data);
+        this.currentTemperature = data.temperature;
+        this.currentHumidity = data.humidity;
+      })
+      .catch((error) => {
+        this.setOff();
+      });
   }
   turnPath(time) {
-    if(this.generateCooling)
-    this.coolingPath.writeSync(1);
-    if(this.generateHeating )
-    this.heatingPath .writeSync(1);
+    if (this.generateCooling) this.coolingPath.writeSync(1);
+    if (this.generateHeating) this.heatingPath.writeSync(1);
     setTimeout(() => {
       this.coolingPath.writeSync(0);
-      this.heatingPath .writeSync(0);
+      this.heatingPath.writeSync(0);
     }, 10000);
   }
 
-toString() {
+  toString() {
     return `Room ID: ${this.id}, Room Name: ${this.roomName}, Temperature: ${this.temperature}°C, Humidity: ${this.humidity}%, Fan Speed: ${this.fanSpeed}, Priority: ${this.priority}, Is Locked: ${this.isLocked}, Is ON: ${this.isON}, Generate Cooling: ${this.generateCooling}, Generate Heating: ${this.generateHeating}, Sensor Pin: ${this.sensorPin}, Cooling Pin: ${this.coolingPin}, Heating Pin: ${this.heatingPin}`;
   }
-
 }
 
 module.exports = room;

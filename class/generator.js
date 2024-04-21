@@ -52,34 +52,34 @@ class generator {
       let low = [];
       this.rooms.forEach((room) => {
         //console.log(room.toString())
-        console.log(" room "+!room.isOffOrStable())
+        // console.log(" room "+!room.isOffOrStable())
         if (!room.isOffOrStable()) {
-          console.log("entered room "+!room.isOffOrStable())
+          // console.log("entered room "+!room.isOffOrStable())
           const priority = room.getPriority();
           switch (priority) {
             case 1:
-            console.log("found high")
+              // console.log("found high")
               high.push(room);
               break;
             case 2:
-            console.log("found medium")
+              // console.log("found medium")
               medium.push(room);
               break;
             case 3:
-            console.log("found low")
+              // console.log("found low")
               low.push(room);
           }
-        } 
+        }
         //else room.setGeneratorOff();
       });
-      console.log("high "+high)
-      console.log("medium "+medium)
-      console.log("low "+low)
-      console.log(low)
+      // console.log("high "+high)
+      // console.log("medium "+medium)
+      // console.log("low "+low)
+      // console.log(low)
       if (high.length == 0) {
         if (medium.length == 0) {
           low?.forEach((room) => {
-            console.log(room.toString())
+            // console.log(room.toString())
             room.increasePrioritytohigh();
           });
         } else {
@@ -87,7 +87,7 @@ class generator {
             room.increasePriorityofroom();
           });
           low?.forEach((room) => {
-            console.log(room.toString())
+            // console.log(room.toString())
             room.increasePriorityofroom();
           });
         }
