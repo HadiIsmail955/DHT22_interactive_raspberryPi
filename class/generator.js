@@ -47,7 +47,8 @@ class generator {
     });
   }
   start() {
-    setInterval(() => {
+      //this.coolingPath.writeSync(0);
+      //this.heatingPath.writeSync(0);
       let updatedCooling = false;
       let updatedHeating = false;
       let high = [];
@@ -122,10 +123,11 @@ class generator {
           updatedHeating = true;
         }
       });
-      console.log("updatedCooling "+updatedCooling+" updatedHeating "+updatedHeating)
       this.generateCooling = updatedCooling;
       this.generateHeating = updatedHeating;
-      this.turnPath(10000)
+      console.log("updatedCooling "+updatedCooling+" updatedHeating "+updatedHeating)
+      if (updatedCooling) {this.coolingPath.writeSync(1); console.log("cooling*****")}
+      if (updatedHeating) {this.heatingPath.writeSync(1); console.log("heating*****")}
       this.rooms.forEach((room) => {
         room.start();
       });
@@ -134,17 +136,13 @@ class generator {
         this.generateHeating,
         this.id
       );
-    }, 10000);
-  }
-
-turnPath(time) {
-  console.log("this.generateCooling "+this.generateCooling+" this.generateHeating "+this.generateHeating)
-    if (this.generateCooling) this.coolingPath.writeSync(1);
-    if (this.generateHeating) this.heatingPath.writeSync(1);
-    setTimeout(() => {
-      this.coolingPath.writeSync(0);
-      this.heatingPath.writeSync(0);
-    }, time);
+      setTimeout(() => {
+        console.log("zero all paths*****")
+         
+          this.start();
+        this.heatingPath.writeSync(0);
+         this.coolingPath.writeSync(0);
+        }, 5000);
   }
 }
 module.exports = generator;
