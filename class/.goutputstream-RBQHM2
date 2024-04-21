@@ -45,16 +45,13 @@ class room {
     this.increasePriority = 0;
   }
   isOffOrStable() {
-    console.log("is stable "+!this.isON+" room id "+this.id+" "+this.isStable())
+    //console.log("is stable "+!this.isON+" room id "+this.id+" "+this.isStable())
     if (!this.isON) return true;
     return this.isStable();
   }
   isStable() {
-    console.log(this.temperature + this.tolerance >= this.currentTemperature &&
-      this.temperature - this.tolerance <= this.currentTemperature)
-      console.log("*****room "+this.id+" t "+this.temperature+" c "+this.currentTemperature)
     if (
-      this.temperature + this.tolerance >= this.currentTemperature &&
+      this.temperature + this.tolerance >= this.currentTemperature ||
       this.temperature - this.tolerance <= this.currentTemperature
     )
       return true;
@@ -76,11 +73,11 @@ class room {
   isHot() {
     return this.temperature < this.currentTemperature;
   }
-  generateCoolingforRoom() {
+  generateCooling() {
     this.generateCooling = true;
     this.generateHeating = false;
   }
-  generateHeatingforRoom() {
+  generateHeating() {
     this.generateCooling = false;
     this.generateHeating = true;
   }
@@ -120,7 +117,7 @@ class room {
   resetPrioity() {
     this.increasePriority = 0;
   }
-  increasePriorityofroom() {
+  increasePriority() {
     this.increasePriority += 1;
   }
   increasePrioritytohigh() {
@@ -144,9 +141,13 @@ class room {
   readSensor() {
      readSensor(this.sensorPin).then((data)=>{
     console.log(data)
+    if (data) {
       this.currentTemperature = data.temperature;
-      this.currentHumidity = data.humidity;      
-    }).catch((error)=>{this.setOff();})
+      this.currentHumidity = data.humidity;
+    } else {
+      this.setOff();
+    }
+    }
   }
   turnPath(time) {
     if(this.generateCooling)

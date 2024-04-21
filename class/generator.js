@@ -38,7 +38,7 @@ class generator {
           room.heatingPin
         );
       });
-
+      //this.rooms.map((room)=>{console.log(room.toString())})
       // Start the generator after fetching rooms
       this.start();
     });
@@ -51,8 +51,11 @@ class generator {
       let medium = [];
       let low = [];
       this.rooms.forEach((room) => {
+        //console.log(room.toString())
+        console.log(" room "+!room.isOffOrStable())
         if (!room.isOffOrStable()) {
-          const priority = room.getPriority;
+          console.log("entered room "+!room.isOffOrStable())
+          const priority = room.getPriority();
           switch (priority) {
             case 1:
             console.log("found high")
@@ -66,49 +69,53 @@ class generator {
             console.log("found low")
               low.push(room);
           }
-        } else room.setGeneratorOff();
+        } 
+        //else room.setGeneratorOff();
       });
       console.log("high "+high)
       console.log("medium "+medium)
       console.log("low "+low)
+      console.log(low)
       if (high.length == 0) {
         if (medium.length == 0) {
           low?.forEach((room) => {
-            room.increasePriority();
+            console.log(room.toString())
+            room.increasePrioritytohigh();
           });
         } else {
           medium?.forEach((room) => {
-            room.increasePriority();
+            room.increasePriorityofroom();
           });
           low?.forEach((room) => {
-            room.increasePriority();
+            console.log(room.toString())
+            room.increasePriorityofroom();
           });
         }
       }
       high?.forEach((room) => {
         if (room.isHot()) {
-          room.generateCooling();
+          room.generateCoolingforRoom();
           updatedCooling = true;
         } else {
-          room.generateHeating();
+          room.generateHeatingforRoom();
           updatedHeating = true;
         }
       });
       medium?.forEach((room) => {
         if (room.isHot()) {
-          room.generateCooling();
+          room.generateCoolingforRoom();
           updatedCooling = true;
         } else {
-          room.generateHeating();
+          room.generateHeatingforRoom();
           updatedHeating = true;
         }
       });
       low?.forEach((room) => {
         if (room.isHot()) {
-          room.generateCooling();
+          room.generateCoolingforRoom();
           updatedCooling = true;
         } else {
-          room.generateHeating();
+          room.generateHeatingforRoom();
           updatedHeating = true;
         }
       });
