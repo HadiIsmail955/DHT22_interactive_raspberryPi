@@ -1,6 +1,7 @@
 const roomController = require("../controllers/roomController");
 const generatorController = require("../controllers/generatorLogsController");
 const Room = require("./room");
+const Gpio = require("onoff").Gpio;
 class generator {
   constructor(
     id,
@@ -16,6 +17,8 @@ class generator {
     this.generateHeating = generateHeating;
     this.coolingPin = coolingPin;
     this.heatingPin = heatingPin;
+    this.coolingPath = new Gpio(coolingPin, "out");
+    this.heatingPath = new Gpio(heatingPin, "out");
     const fetchRooms = async () => {
       return await roomController.getRoomsByGeneratorId(id);
     };
@@ -70,7 +73,7 @@ class generator {
               low.push(room);
           }
         }
-        //else room.setGeneratorOff();
+        else room.setGeneratorOff();
       });
       // console.log("high "+high)
       // console.log("medium "+medium)
@@ -119,11 +122,13 @@ class generator {
           updatedHeating = true;
         }
       });
+      console.log("updatedCooling "+updatedCooling+" updatedHeating "+updatedHeating)
+      this.generateCooling = updatedCooling;
+      this.generateHeating = updatedHeating;
+      this.turnPath(10000)
       this.rooms.forEach((room) => {
         room.start();
       });
-      this.generateCooling = updatedCooling;
-      this.generateHeating = updatedHeating;
       generatorController.createGeneratorLog(
         this.generateCooling,
         this.generateHeating,
@@ -131,6 +136,15 @@ class generator {
       );
     }, 10000);
   }
-}
 
+turnPath(time) {
+  console.log("this.generateCooling "+this.generateCooling+" this.generateHeating "+this.generateHeating)
+    if (this.generateCooling) this.coolingPath.writeSync(1);
+    if (this.generateHeating) this.heatingPath.writeSync(1);
+    setTimeout(() => {
+      this.coolingPath.writeSync(0);
+      this.heatingPath.writeSync(0);
+    }, time);
+  }
+}
 module.exports = generator;

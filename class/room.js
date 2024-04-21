@@ -169,7 +169,7 @@ class room {
     setTimeout(() => {
       this.coolingPath.writeSync(0);
       this.heatingPath.writeSync(0);
-    }, 10000);
+    }, time);
   }
 
   toString() {
