@@ -96,6 +96,19 @@ async function getRoomsByGeneratorsId(req, res) {
   }
 }
 
+async function getRoomsByUserId(req, res) {
+  try {
+    const { userId } = req.body;
+    const rooms = await Room.findAll({ where: { user_id: userId } });
+    res.status(200).json(rooms);
+  } catch (error) {
+    console.error("Error fetching rooms by generator ID:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error", message: error.message });
+  }
+}
+
 module.exports = {
   createRoom,
   updateRoom,
@@ -104,4 +117,5 @@ module.exports = {
   getRoomsByGeneratorId,
   getAllRooms,
   getRoomsByGeneratorsId,
+  getRoomsByUserId,
 };

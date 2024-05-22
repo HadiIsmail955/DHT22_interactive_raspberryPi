@@ -2,7 +2,7 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 async function authAdmin(req, res, next) {
-  const token = req.cookies.token;
+  const token = req.headers.token;
   if (!token) {
     return res
       .status(401)
@@ -10,7 +10,7 @@ async function authAdmin(req, res, next) {
   }
   try {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    if (decodedToken.role !== "admin") {
+    if (decodedToken.role !== "Admin") {
       return res
         .status(403)
         .json({ error: "Access denied. Admin role required." });
@@ -23,7 +23,7 @@ async function authAdmin(req, res, next) {
 }
 
 async function auth(req, res, next) {
-  const token = req.cookies.token;
+  const token = req.headers.token;
   if (!token) {
     return res
       .status(401)
@@ -31,7 +31,8 @@ async function auth(req, res, next) {
   }
   try {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    if (decodedToken.role !== "admin" || decodedToken.role !== "user") {
+    console.log(decodedToken);
+    if (decodedToken.role !== "Admin" && decodedToken.role !== "User") {
       return res
         .status(403)
         .json({ error: "Access denied. User or Admin role required." });
