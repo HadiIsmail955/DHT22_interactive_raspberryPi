@@ -44,8 +44,19 @@ async function getAllGenerators() {
     const generators = await generator.findAll();
     return generators;
   } catch (error) {
-    console.log(error)
-    throw error
+    console.log(error);
+    throw error;
+  }
+}
+async function getAllGenerator(req, res) {
+  try {
+    const generators = await generator.findAll();
+    res.status(200).json(generators);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "Internal server error", message: error.message });
   }
 }
 async function getGeneratorById(generatorId) {
@@ -57,5 +68,22 @@ async function getGeneratorById(generatorId) {
     throw error;
   }
 }
-
-module.exports = { createGenerator, updateGenerator, getAllGenerators };
+async function getGeneratorsById(req, res) {
+  try {
+    const { generatorId } = req.body;
+    const generatorFound = await generator.findByPk(generatorId);
+    res.status(200).json(generatorFound);
+  } catch (error) {
+    console.error("Error fetching room by ID:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error", message: error.message });
+  }
+}
+module.exports = {
+  createGenerator,
+  updateGenerator,
+  getAllGenerators,
+  getAllGenerator,
+  getGeneratorsById,
+};

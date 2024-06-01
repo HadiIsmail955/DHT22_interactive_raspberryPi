@@ -47,12 +47,12 @@ async function loginUser(req, res) {
       process.env.JWT_SECRET,
       { expiresIn: oneDayInSeconds }
     );
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      maxAge: oneDayInSeconds * 1000,
+    return res.status(200).json({
+      message: "Login successful",
+      token,
+      id: userModel.id,
+      role: userModel.role,
     });
-    return res.status(200).json({ message: "Login successful", token });
   } catch (error) {
     console.error("Error logging in:", error);
     return res
@@ -61,4 +61,16 @@ async function loginUser(req, res) {
   }
 }
 
-module.exports = { createUser, loginUser };
+async function getAllUsers(req, res) {
+  try {
+    const users = await user.findAll();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error", message: error.message });
+  }
+}
+
+module.exports = { createUser, loginUser, getAllUsers };
