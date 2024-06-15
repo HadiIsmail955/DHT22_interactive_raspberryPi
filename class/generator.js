@@ -1,5 +1,5 @@
 const roomController = require("../controllers/roomController");
-const generatorController = require("../controllers/generatorLogsController");
+const generatorController = require("../controllers/generatorController");
 const Room = require("./room");
 const Gpio = require("onoff").Gpio;
 class generator {
@@ -46,6 +46,44 @@ class generator {
       this.start();
     });
   }
+  updateGenerator() {
+    const generatorInfo = generatorController.getGeneratorById(this.id);
+    this.generatorName = generatorInfo.generatorName;
+    this.generateCooling = generatorInfo.generateCooling;
+    this.generateHeating = generatorInfo.generateHeating;
+    this.coolingPin = generatorInfo.coolingPin;
+    this.heatingPin = generatorInfo.heatingPin;
+    this.coolingPath = new Gpio(generatorInfo.coolingPin, "out");
+    this.heatingPath = new Gpio(generatorInfo.heatingPin, "out");
+    const fetchRooms = async () => {
+      return await roomController.getRoomsByGeneratorId(this.id);
+    };
+    fetchRooms().then((rooms) => {
+      this.rooms = rooms.map((room) => {
+        return new Room(
+          room.id,
+          room.roomName,
+          room.temperature,
+          room.humidity,
+          room.fanSpeed,
+          room.tolerance,
+          room.priority,
+          room.isLocked,
+          room.isON,
+          room.generateCooling,
+          room.generateHeating,
+          room.sensorPin,
+          room.coolingPin,
+          room.heatingPin
+        );
+      });
+    });
+  }
+  updateRooms() {
+    this.rooms.forEach((room) => {
+      room.getUpdate();
+    });
+  }
   start() {
     setInterval(() => {
       let updatedCooling = false;
@@ -72,8 +110,7 @@ class generator {
               // console.log("found low")
               low.push(room);
           }
-        }
-        else room.setGeneratorOff();
+        } else room.setGeneratorOff();
       });
       // console.log("high "+high)
       // console.log("medium "+medium)
@@ -122,10 +159,12 @@ class generator {
           updatedHeating = true;
         }
       });
-      console.log("updatedCooling "+updatedCooling+" updatedHeating "+updatedHeating)
+      console.log(
+        "updatedCooling " + updatedCooling + " updatedHeating " + updatedHeating
+      );
       this.generateCooling = updatedCooling;
       this.generateHeating = updatedHeating;
-      this.turnPath(10000)
+      this.turnPath(10000);
       this.rooms.forEach((room) => {
         room.start();
       });
@@ -137,8 +176,13 @@ class generator {
     }, 10000);
   }
 
-turnPath(time) {
-  console.log("this.generateCooling "+this.generateCooling+" this.generateHeating "+this.generateHeating)
+  turnPath(time) {
+    console.log(
+      "this.generateCooling " +
+        this.generateCooling +
+        " this.generateHeating " +
+        this.generateHeating
+    );
     if (this.generateCooling) this.coolingPath.writeSync(1);
     if (this.generateHeating) this.heatingPath.writeSync(1);
     setTimeout(() => {

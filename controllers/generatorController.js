@@ -29,7 +29,9 @@ async function updateGenerator(req, res) {
     if (updatedGenerators.length === 0) {
       return res.status(404).json({ error: "Generator not found" });
     }
-
+    global.generators.forEach((generator) => {
+      generator.updateGenerator();
+    });
     res.status(200).json(await getGeneratorById(generatorId));
   } catch (error) {
     console.error("Error updating generator:", error);
@@ -80,10 +82,21 @@ async function getGeneratorsById(req, res) {
       .json({ error: "Internal server error", message: error.message });
   }
 }
+
+async function getGeneratorById(generatorId) {
+  try {
+    const generatorFound = await generator.findByPk(generatorId);
+    return generatorFound;
+  } catch (error) {
+    console.error("Error fetching room by ID:", error);
+  }
+}
+
 module.exports = {
   createGenerator,
   updateGenerator,
   getAllGenerators,
   getAllGenerator,
   getGeneratorsById,
+  getGeneratorById,
 };

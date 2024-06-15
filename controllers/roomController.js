@@ -5,6 +5,9 @@ async function createRoom(req, res) {
     const roomData = req.body;
     console.log(roomData);
     const createdRoom = await Room.create(roomData);
+    global.generators.forEach((generator) => {
+      generator.updateGenerator();
+    });
     res.status(201).json(createdRoom);
   } catch (error) {
     console.error("Error creating room:", error.message);
@@ -28,7 +31,9 @@ async function updateRoom(req, res) {
     if (updatedRooms.length === 0) {
       return res.status(404).json({ error: "Room not found" });
     }
-
+    global.generators.forEach((generator) => {
+      generator.updateRooms();
+    });
     res.status(200).json(await getRoomById(roomId));
   } catch (error) {
     console.error("Error updating room:", error);
