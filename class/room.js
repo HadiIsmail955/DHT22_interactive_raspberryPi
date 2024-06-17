@@ -99,7 +99,7 @@ class room {
     this.generateCooling = false;
     this.generateHeating = false;
   }
-  get getUpdate() {
+  getUpdate() {
     const updateRroom = roomController.getRoomById(this.id);
     if (updateRroom) {
       this.temperature = updateRroom.temperature;
