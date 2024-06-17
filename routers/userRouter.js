@@ -6,6 +6,6 @@ app.get("/test", (req, res) => {
   res.send(test);
 });
 app.get("/getAllUsers", authAdmin, userController.getAllUsers);
-app.post("/create", authAdmin, userController.createUser);
+app.post("/create",authAdmin, userController.createUser);
 app.post("/login", userController.loginUser);
 module.exports = app;

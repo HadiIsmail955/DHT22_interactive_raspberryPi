@@ -138,7 +138,7 @@ class room {
     this.increasePriority = this.priority - 1;
   }
   calculateWorkingTimePersecond() {
-    return 10000 / this.getPriority();
+    return 5000 / this.getPriority();
   }
   start() {
     this.readSensor();
