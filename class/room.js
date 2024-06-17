@@ -116,8 +116,8 @@ class room {
       this.sensorPin = updateRroom.sensorPin;
       this.coolingPin = updateRroom.coolingPin;
       this.heatingPin = updateRroom.heatingPin;
-      this.coolingPath = new Gpio(coolingPin, "out");
-      this.heatingPath = new Gpio(heatingPin, "out");
+      this.coolingPath = new Gpio(updateRroom.coolingPin, "out");
+      this.heatingPath = new Gpio(updateRroom.heatingPin, "out");
     } else this.setOff;
   }
   getPriority() {
